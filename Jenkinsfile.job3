@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+    triggers {
+        upstream(upstreamProjects: 'Job_2', threshold: hudson.model.Result.SUCCESS)
+    }
+    stages {
+        stage('Push Changes Back to Git') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-pat', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
+                    sh '''
+                        cd /var/jenkins_home/shared_storage
+                        git config user.name "Jenkins CI"
+                        git config user.email "jenkins@example.com"
+                        
+                        # Защита от бесконечного цикла: пушим только если файлы реально были удалены
+                        if [ -n "$(git status --porcelain)" ]; then
+                            git add -A
+                            git commit -m "ci: remove file1.txt and file2.txt via Job_3 [skip ci]"
+                            git push https://${GIT_USER}:${GIT_TOKEN}@://github.com{GIT_USER}/jenkins-cicd-demo.git HEAD:master
+                        else
+                            echo "Изменений для отправки в Git нет."
+                        fi
+                    '''
+                }
+            }
+        }
+    }
+}

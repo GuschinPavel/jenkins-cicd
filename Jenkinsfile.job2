@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+    triggers {
+        upstream(upstreamProjects: 'Job_1', threshold: hudson.model.Result.SUCCESS)
+    }
+    stages {
+        stage('Delete Files') {
+            steps {
+                sh '''
+                    cd /var/jenkins_home/shared_storage
+                    rm -f file1.txt file2.txt
+                    echo "Файлы file1.txt и file2.txt удалены. Остались:"
+                    ls -la
+                '''
+            }
+        }
+    }
+}

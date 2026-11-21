@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    triggers {
+        // Проверка изменений в Git каждую минуту (или сработает мгновенно по Webhook)
+        pollSCM('* * * * *')
+    }
+    stages {
+        stage('Checkout & Save to Local Storage') {
+            steps {
+                sh '''
+                    mkdir -p /var/jenkins_home/shared_storage
+                    rm -rf /var/jenkins_home/shared_storage/* /var/jenkins_home/shared_storage/.git
+                    cp -a . /var/jenkins_home/shared_storage/
+                    echo "Код успешно загружен в локальное хранилище:"
+                    ls -la /var/jenkins_home/shared_storage
+                '''
+            }
+        }
+    }
+}

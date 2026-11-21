@@ -1,8 +1,8 @@
 pipeline {
     agent any
     triggers {
-        // Проверка изменений в Git каждую минуту (или сработает мгновенно по Webhook)
-        pollSCM('* * * * *')
+        // Мгновенный запуск при получении Webhook от GitHub
+        githubPush()
     }
     stages {
         stage('Checkout & Save to Local Storage') {

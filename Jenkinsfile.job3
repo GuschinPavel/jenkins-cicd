@@ -12,12 +12,10 @@ pipeline {
                         git config user.name "Jenkins CI"
                         git config user.email "jenkins@example.com"
                         
-                        # Защита от бесконечного цикла: пушим только если файлы реально были удалены
                         if [ -n "$(git status --porcelain)" ]; then
                             git add -A
                             git commit -m "ci: remove file1.txt and file2.txt via Job_3 [skip ci]"
-                            git push https://${GIT_USER}:${GIT_TOKEN}@://github.com{GIT_USER}/jenkins-cicd.git HEAD:main
-
+                            git push "https://${GIT_USER}:${GIT_TOKEN}@://github.com" HEAD:main
                         else
                             echo "Изменений для отправки в Git нет."
                         fi

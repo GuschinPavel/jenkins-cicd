@@ -15,10 +15,11 @@ pipeline {
                         if [ -n "$(git status --porcelain)" ]; then
                             git add -A
                             git commit -m "ci: remove file1.txt and file2.txt via Job_3 [skip ci]"
-                            git push "https://${GIT_USER}:${GIT_TOKEN}@://github.com" HEAD:main
-                        else
-                            echo "Изменений для отправки в Git нет."
                         fi
+                        
+                        # Принудительно задаем правильный URL и пушим (даже если коммит уже был создан на прошлом упавшем прогоне)
+                        git remote set-url origin "https://${GIT_USER}:${GIT_TOKEN}@://github.com"
+                        git push origin HEAD:main
                     '''
                 }
             }

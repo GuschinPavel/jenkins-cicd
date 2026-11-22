@@ -16,7 +16,8 @@ pipeline {
                         if [ -n "$(git status --porcelain)" ]; then
                             git add -A
                             git commit -m "ci: remove file1.txt and file2.txt via Job_3 [skip ci]"
-                            git push https://${GIT_USER}:${GIT_TOKEN}@://github.com{GIT_USER}/jenkins-cicd-demo.git HEAD:master
+                            git push https://${GIT_USER}:${GIT_TOKEN}@://github.com{GIT_USER}/jenkins-cicd-demo.git HEAD:main
+
                         else
                             echo "Изменений для отправки в Git нет."
                         fi
